@@ -2,22 +2,23 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
 import tailwind from 'tailwind-rn';
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Landing from './components/auth/Landing';
+
+const Stack = createStackNavigator();
+
 export default function App() {
   return (
-    <View style={tailwind('h-full flex')}>
-      <Text style={tailwind('bg-pink-200 text-red-500 font-bold')}>
-        Hello World
-      </Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Landing">
+        <Stack.Screen
+          name="Landing"
+          component={Landing}
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-/* const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}); */
