@@ -48,7 +48,12 @@ const SignUp = () => {
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput onBlur={onBlur} onChangeText={onChange} value={value} />
+          <TextInput
+            secureTextEntry={true}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
         )}
         name="password"
       />
