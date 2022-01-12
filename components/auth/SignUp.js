@@ -1,14 +1,20 @@
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
-import { View, Button, TextInput } from 'react-native';
+import { View, Button, TextInput, Text, Alert } from 'react-native';
 
 const SignUp = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({ mode: 'onBlur' });
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
 
   const onSubmit = (data) => console.log(data);
 
@@ -16,37 +22,38 @@ const SignUp = () => {
     <View>
       <Controller
         control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput onBlur={onBlur} onChangeText={onChange} value={value} />
+        )}
         name="name"
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            placeholder="name"
-            onChangeText={(value) => onChange(value)}
-          />
-        )}
       />
+      {errors.name && <Text>This is required.</Text>}
       <Controller
         control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput onBlur={onBlur} onChangeText={onChange} value={value} />
+        )}
         name="email"
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            placeholder="email"
-            onChangeText={(value) => onChange(value)}
-            value={value}
-            onBlur={onBlur}
-          />
-        )}
       />
+      {errors.email && <Text>This is required.</Text>}
       <Controller
         control={control}
-        name="password"
-        render={({ field: { onChange, value, onBlur } }) => (
-          <TextInput
-            placeholder="password"
-            onChangeText={(value) => onChange(value)}
-          />
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput onBlur={onBlur} onChangeText={onChange} value={value} />
         )}
+        name="password"
       />
-      <Button onPress={handleSubmit(onSubmit())} />
+      {errors.password && <Text>This is required.</Text>}
+      <Button title="Sign up" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };
