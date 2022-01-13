@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ import {
 } from '@env';
 
 import Landing from './components/auth/Landing';
+import SignUp from './components/auth/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ const firebaseConfig = {
   measurementId: MEASUREMENT_ID,
 };
 
+if (firebase.getApps.length === 0) {
+  console.log(API_KEY);
+  firebase.initializeApp(firebaseConfig);
+}
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -35,7 +41,12 @@ export default function App() {
           name="Landing"
           component={Landing}
           options={{ headerShown: false }}
-        ></Stack.Screen>
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

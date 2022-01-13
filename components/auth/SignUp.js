@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import { View, Button, TextInput, Text, Alert } from 'react-native';
 
@@ -16,7 +17,16 @@ const SignUp = () => {
     },
   });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const auth = getAuth();
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+    const user = userCredential.user;
+    console.log(user);
+  };
 
   return (
     <View>
