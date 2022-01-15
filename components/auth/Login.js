@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { View, Button, TextInput, Text, Alert } from 'react-native';
 
@@ -11,7 +11,6 @@ const SignUp = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: '',
       email: '',
       password: '',
     },
@@ -20,7 +19,7 @@ const SignUp = () => {
   const onSubmit = async (data) => {
     try {
       const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         data.email,
         data.password
@@ -34,17 +33,6 @@ const SignUp = () => {
 
   return (
     <View>
-      <Controller
-        control={control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput onBlur={onBlur} onChangeText={onChange} value={value} />
-        )}
-        name="name"
-      />
-      {errors.name && <Text>This is required.</Text>}
       <Controller
         control={control}
         rules={{
@@ -72,7 +60,7 @@ const SignUp = () => {
         name="password"
       />
       {errors.password && <Text>This is required.</Text>}
-      <Button title="Sign up" onPress={handleSubmit(onSubmit)} />
+      <Button title="Login" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 };

@@ -1,7 +1,12 @@
 import * as firebase from 'firebase/app';
-
+import { useState } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Text, View } from 'react-native';
+
+import Landing from './components/auth/Landing';
+import SignUp from './components/auth/SignUp';
 
 import {
   API_KEY,
@@ -12,9 +17,6 @@ import {
   APP_ID,
   MEASUREMENT_ID,
 } from '@env';
-
-import Landing from './components/auth/Landing';
-import SignUp from './components/auth/SignUp';
 
 const Stack = createStackNavigator();
 
@@ -29,12 +31,33 @@ const firebaseConfig = {
 };
 
 if (firebase.getApps.length === 0) {
-  console.log(API_KEY);
   firebase.initializeApp(firebaseConfig);
 }
 
-export default function App() {
-  return (
+const App = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setLoggedIn(true);
+      setLoaded(true);
+    } else {
+      setLoggedIn(false);
+      setLoaded(true);
+    }
+  });
+
+  if (!loaded) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!loggedIn) {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Landing">
         <Stack.Screen
@@ -48,6 +71,14 @@ export default function App() {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer>;
+  }
+
+  return (
+    <View>
+      <Text>User is logged</Text>
+    </View>
   );
-}
+};
+
+export default App;
