@@ -1,8 +1,9 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
-import { View, Button, TextInput, Text, Alert } from 'react-native';
+import { View, Button, TextInput, Text } from 'react-native';
 
 const SignUp = () => {
   const {
@@ -20,13 +21,12 @@ const SignUp = () => {
   const onSubmit = async (data) => {
     try {
       const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      const user = userCredential.user;
-      console.log(user);
+      await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const db = getFirestore();
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
+        name: data.name,
+        email: data.email,
+      });
     } catch (error) {
       console.log(error);
     }

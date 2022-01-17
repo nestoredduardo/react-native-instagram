@@ -1,9 +1,9 @@
 import * as firebase from 'firebase/app';
 import { useState } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, View } from 'react-native';
+import { Text, View, Button } from 'react-native';
 
 import Landing from './components/auth/Landing';
 import SignUp from './components/auth/SignUp';
@@ -40,6 +40,7 @@ const App = () => {
 
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
+    console.log('change');
     if (user) {
       setLoggedIn(true);
       setLoaded(true);
@@ -77,6 +78,10 @@ const App = () => {
   return (
     <View>
       <Text>User is logged</Text>
+      <Button
+        onPress={() => signOut(auth).then(() => console.log('success'))}
+        title="Logout"
+      ></Button>
     </View>
   );
 };
