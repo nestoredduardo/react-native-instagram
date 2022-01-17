@@ -1,12 +1,17 @@
 import * as firebase from 'firebase/app';
 import { useState } from 'react';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, View, Button } from 'react-native';
+import { Text, View } from 'react-native';
+import { Provider } from 'react-redux';
 
 import Landing from './components/auth/Landing';
+import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
+import Main from './components/Main';
+
+import generateStore from './redux/store';
 
 import {
   API_KEY,
@@ -38,9 +43,10 @@ const App = () => {
   const [loaded, setLoaded] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const store = generateStore();
+
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
-    console.log('change');
     if (user) {
       setLoggedIn(true);
       setLoaded(true);
@@ -59,30 +65,33 @@ const App = () => {
   }
 
   if (!loggedIn) {
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Landing">
-        <Stack.Screen
-          name="Landing"
-          component={Landing}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>;
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Landing">
+          <Stack.Screen
+            name="Landing"
+            component={Landing}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
   }
 
   return (
-    <View>
-      <Text>User is logged</Text>
-      <Button
-        onPress={() => signOut(auth).then(() => console.log('success'))}
-        title="Logout"
-      ></Button>
-    </View>
+    <Provider store={store}>
+      <Main />
+    </Provider>
   );
 };
 

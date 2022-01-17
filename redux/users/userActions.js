@@ -1,4 +1,5 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 import { USER_STATE_CHANGE } from './userTypes';
 
@@ -8,6 +9,7 @@ const fetchUser = () => async (dispatch) => {
   const docRef = doc(db, 'users', auth.currentUser.uid);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
+    console.log(docSnap.data());
     dispatch({
       type: USER_STATE_CHANGE,
       payload: docSnap.data(),
@@ -17,3 +19,5 @@ const fetchUser = () => async (dispatch) => {
     console.log('No such document!');
   }
 };
+
+export { fetchUser };
