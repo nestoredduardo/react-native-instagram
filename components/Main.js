@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchUser } from '../redux/users/userActions';
 import { useEffect } from 'react';
 
-const Main = ({ fetchUser }) => {
+const Main = ({ fetchUser, currentUser }) => {
   const auth = getAuth();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const Main = ({ fetchUser }) => {
 
   return (
     <View>
-      <Text>User is logged</Text>
+      {currentUser && <Text> {currentUser.name} is logged</Text>}
       <Button
         onPress={() => signOut(auth).then(() => console.log('success'))}
         title="Logout"
@@ -23,8 +23,14 @@ const Main = ({ fetchUser }) => {
   );
 };
 
+const mapStateToProps = ({ users }) => {
+  return {
+    currentUser: users.currentUser,
+  };
+};
+
 const mapDispatchToProps = {
   fetchUser,
 };
 
-export default connect(null, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

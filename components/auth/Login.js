@@ -24,8 +24,6 @@ const SignUp = () => {
         data.email,
         data.password
       );
-      const user = userCredential.user;
-      console.log(user);
     } catch (error) {
       console.log(error);
     }
