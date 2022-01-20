@@ -1,36 +1,63 @@
-import { Text, View, Button } from 'react-native';
-import { getAuth, signOut } from 'firebase/auth';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useEffect } from 'react';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { fetchUser } from '../redux/users/userActions';
-import { useEffect } from 'react';
 
-const Main = ({ fetchUser, currentUser }) => {
-  const auth = getAuth();
+import Feed from './main/Feed';
+import Add from './main/Add';
+import Profile from './main/Profile';
 
+const Tab = createBottomTabNavigator();
+
+const Main = ({ fetchUser }) => {
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
     <View>
-      {currentUser && <Text> {currentUser.name} is logged</Text>}
-      <Button
-        onPress={() => signOut(auth).then(() => console.log('success'))}
-        title="Logout"
-      ></Button>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="Feed"
+          component={Feed}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Add"
+          component={Add}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="plus-box" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons
+                name="account-circle"
+                color={color}
+                size={26}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </View>
   );
-};
-
-const mapStateToProps = ({ users }) => {
-  return {
-    currentUser: users.currentUser,
-  };
 };
 
 const mapDispatchToProps = {
   fetchUser,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(null, mapDispatchToProps)(Main);
